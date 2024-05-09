@@ -1,7 +1,7 @@
 "use client"
 
 import SliderC from "@/app/Components/Slider.jsx";
-import img from "../../previe.jpg";
+import img from "../../../public/previe.jpg";
 import Header from "@/app/components/Header";
 import Calendar from "@/app/components/Calendar";
 import DatePickerValue from "@/app/components/Calendar";
