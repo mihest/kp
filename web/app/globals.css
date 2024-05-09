@@ -1,3 +1,35 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+:root {
+    --white-main-color: white;
+    --dark-main-color: rgb(17 24 39);
+    --dark-second-color: rgb(31 41 55)
+}
+
+body {
+    background-color: var(--white-main-color);
+    min-height: 100vh;
+}
+
+@media (prefers-color-scheme: dark) {
+    body {
+        background-color: var(--dark-main-color);
+    }
+
+    .slick-dots li.slick-active button:before {
+        color: white!important;
+    }
+    .slick-dots li button:before {
+        color: white!important;
+    }
+    .slick-prev:before, .slick-next:before {
+        color: white!important;
+    }
+}
+
+.slick-prev:before, .slick-next:before {
+    color: black;
+}
