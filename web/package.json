@@ -9,11 +9,19 @@
     "lint": "next lint"
   },
   "dependencies": {
+    "@emotion/react": "^11.11.4",
+    "@emotion/styled": "^11.11.5",
+    "@headlessui/react": "^2.0.3",
+    "@mui/material": "^5.15.17",
+    "@mui/x-date-pickers": "^7.3.2",
+    "@pbe/react-yandex-maps": "^1.2.5",
     "axios": "^1.6.8",
+    "dayjs": "^1.11.11",
     "next": "14.2.3",
     "react": "^18",
     "react-dom": "^18",
-    "tw-elements-react": "^1.0.0-alpha2"
+    "react-slick": "^0.30.2",
+    "slick-carousel": "^1.8.1"
   },
   "devDependencies": {
     "eslint": "^8",
