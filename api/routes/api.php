@@ -16,6 +16,8 @@ Route::group([
     Route::post('logout', 'App\Http\Controllers\AuthController@logout')->middleware('jwt.auth');
     Route::post('refresh', 'App\Http\Controllers\AuthController@refresh');
     Route::post('user', 'App\Http\Controllers\AuthController@me')->middleware('jwt.auth');
+    Route::patch('user', 'App\Http\Controllers\AuthController@update')->middleware('jwt.auth');
+    Route::delete('user', 'App\Http\Controllers\AuthController@destroy')->middleware('jwt.auth');
 
 });
 
@@ -25,11 +27,13 @@ Route::get('rooms/{room}', 'App\Http\Controllers\RoomController@show');
 Route::delete('rooms/{room}', 'App\Http\Controllers\RoomController@destroy');
 
 Route::group([
-    'middleware' => ['jwt.auth', 'checkAdmin']
+    'middleware' => ['jwt.auth']
 ], function ($router) {
 
-    Route::get('/test', function () {
-        return 1;
+//    Route::get('/test', function () {
+//        return 1;
+//    });
+    Route::get('test', function() {
+        return JWTAuth::parseToken()->getPayload();
     });
-
 });

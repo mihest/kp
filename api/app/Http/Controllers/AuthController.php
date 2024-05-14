@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Resources\UserResource;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 
 class AuthController extends Controller
 {
@@ -14,6 +16,7 @@ class AuthController extends Controller
      */
     public function register() : JsonResponse {
         request()->validate([
+            'name' => 'required|string|max:255',
             'email' => 'required|email|unique:users,email',
             'password' => 'required|confirmed|string|min:6'
         ], [
@@ -26,8 +29,10 @@ class AuthController extends Controller
         ]);
 
         $user = User::create([
+            'name' => request()->name,
             'email' => request()->email,
-            'password' => bcrypt(request()->password)
+            'password' => bcrypt(request()->password),
+            'role_id' => 2
         ]);
         $token = auth()->login($user);
         return $this->respondWithToken($token);
@@ -56,7 +61,7 @@ class AuthController extends Controller
      */
     public function me()
     {
-        return response()->json(auth()->user());
+        return response()->json(new UserResource(auth()->user()));
     }
 
     /**
@@ -81,6 +86,30 @@ class AuthController extends Controller
         return $this->respondWithToken(auth()->refresh());
     }
 
+    public function update() {
+        request()->validate([
+            'current_password' => 'current_password:api',
+            'password' => 'string|confirmed|string|min:6',
+            'name' => 'string|max:255',
+            'email' => 'email|unique:users,email',
+        ]);
+        $user = auth()->user();
+        $userData = request()->only(['name', 'email', 'password']);
+
+        if (isset($userData['password'])) {
+            $userData['password'] = bcrypt($userData['password']);
+        }
+
+        $user->update($userData);
+
+        return new UserResource($user);
+    }
+
+    public function destroy() {
+        $user = auth()->user();
+        $user->delete();
+    }
+
     /**
      * Get the token array structure.
      *
@@ -91,6 +120,7 @@ class AuthController extends Controller
     protected function respondWithToken(string $token)
     {
         return response()->json([
+            'user' => new UserResource(auth()->user()),
             'access_token' => $token,
             'token_type' => 'bearer',
             'expires_in' => auth()->factory()->getTTL() * 60

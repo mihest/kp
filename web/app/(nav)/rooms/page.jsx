@@ -1,22 +1,41 @@
 import Header from "@/app/components/Header";
 import Link from "next/link";
 import axios from "axios";
+import {notFound} from "next/navigation";
+
+export const metadata = {
+    title: 'Rooms',
+}
 
 const fetchRooms = async () => {
-    const { data } = await axios.get('http://127.0.0.1:8000/api/rooms', {
-        headers: {
-            Accept: 'application/json'
-        }
-    });
-    return data;
+    try {
+        const {data} = await axios.get('http://127.0.0.1:8000/api/rooms', {
+            headers: {
+                Accept: 'application/json'
+            }
+        });
+        return data;
+    }
+    catch (e) {
+        console.log(e)
+    }
 }
 
 const Rooms = async () => {
     const rooms = await fetchRooms();
 
+    if(!rooms) return (
+        <>
+            <Header />
+            <div className="flex justify-center">
+                <span className="text-5xl dark:text-gray-300">Ресурсы не найдены</span>
+            </div>
+
+        </>
+    );
+
     return (
         <>
-            <Header/>
             <main className="mt-12">
                 <div
                     className="lg:px-20 sm:px-12 grid xl:grid-cols-4 lg:grid-cols-3 sm:grid-cols-2 justify-center sm:justify-start gap-10"

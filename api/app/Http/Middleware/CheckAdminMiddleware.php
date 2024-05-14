@@ -16,7 +16,7 @@ class CheckAdminMiddleware
      */
     public function handle(Request $request, Closure $next): Response
     {
-        if (!auth()->user() || auth()->user()->role->name != 'admin'){
+        if (!auth()->check() || auth()->user()->role->name != 'admin'){
             return response()->json(['error' => 'Недостаточно прав'], 403);
         }
         return $next($request);

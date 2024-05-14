@@ -13,13 +13,7 @@ class RoomController extends Controller
     {
 
         return Room::filter()->get();
-//        $sortOrder = 'asc';
-//
-//        if (request()->sortBy && Str::startsWith(request()->sortBy, '-')) {
-//            request()->sortBy = substr(request()->sortBy, 1);
-//            $sortOrder = 'desc';
-//        }
-//        return Room::orderBy(request()->sortBy ? request()->sortBy : 'id', $sortOrder)->get();
+
     }
 
     public function store(Request $request)

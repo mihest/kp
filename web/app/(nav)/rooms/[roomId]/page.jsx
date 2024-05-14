@@ -10,7 +10,11 @@
 // } from "tw-elements-react";
 import axios from "axios";
 import {notFound} from "next/navigation";
-import ClientComponent from "@/app/rooms/[roomId]/ClientComponent";
+import ClientComponent from "@/app/(nav)/rooms/[roomId]/ClientComponent";
+
+export const metadata = {
+    title: 'Room',
+}
 
 const getData = async (id) => {
     try {
