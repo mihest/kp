@@ -1,0 +1,10 @@
+{
+  "compilerOptions": {
+    "paths": {
+      "@/*": ["./src/*"]
+    },
+    "exclude": [
+      "src/pages/index.jsx"
+    ]
+  }
+}

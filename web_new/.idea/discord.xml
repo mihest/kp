@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="DiscordProjectSettings">
+    <option name="show" value="PROJECT" />
+    <option name="nameOverrideEnabled" value="true" />
+    <option name="nameOverrideText" value="Курсач - web" />
+    <option name="description" value="web - интерфейс курсового проекта" />
+    <option name="applicationTheme" value="default" />
+    <option name="iconsTheme" value="default" />
+    <option name="button1Title" value="telegram" />
+    <option name="button1Url" value="https://t.me/mihest" />
+    <option name="button2Title" value="github" />
+    <option name="button2Url" value="https://github.com/ligets" />
+    <option name="customApplicationId" value="" />
+  </component>
+</project>

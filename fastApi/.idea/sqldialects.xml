@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="SqlDialectMappings">
+    <file url="file://$PROJECT_DIR$/migrations/versions/2024_07_23_1207-652b260f8843_seeder_table_roles.py" dialect="GenericSQL" />
+    <file url="file://$PROJECT_DIR$/migrations/versions/2024_07_25_1540-aff538cf5eb2_seeder_table_rooms.py" dialect="GenericSQL" />
+  </component>
+</project>
