@@ -5,5 +5,3 @@
 !/web_new
 !.gitignore
 !README.md
-/*/.idea
-!/fastApi/venv
