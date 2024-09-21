@@ -2,34 +2,59 @@
 @tailwind components;
 @tailwind utilities;
 
-
 :root {
     --white-main-color: white;
-    --dark-main-color: rgb(17 24 39);
+    --dark-main-color: rgb(17, 24, 39);
     --dark-second-color: rgb(31 41 55)
+
 }
 
 body {
     background-color: var(--white-main-color);
-    min-height: 100vh;
 }
 
-@media (prefers-color-scheme: dark) {
-    body {
-        background-color: var(--dark-main-color);
-    }
+/*@media (prefers-color-scheme: dark) {*/
+    /*body {*/
+    /*    background-color: var(--dark-main-color);*/
+    /*}*/
 
-    .slick-dots li.slick-active button:before {
-        color: white!important;
-    }
-    .slick-dots li button:before {
-        color: white!important;
-    }
-    .slick-prev:before, .slick-next:before {
-        color: white!important;
-    }
+    /*.slick-dots li.slick-active button:before {*/
+    /*    color: white!important;*/
+    /*}*/
+    /*.slick-dots li button:before {*/
+    /*    color: white!important;*/
+    /*}*/
+    /*.slick-prev:before, .slick-next:before {*/
+    /*    color: white!important;*/
+    /*}*/
+/*}*/
+header, .header{
+    box-shadow: 0 0 10px 0 rgba(27, 27, 28, 0.2)
 }
+footer{
+    box-shadow: 10px 0 0 0 rgba(27, 27, 28, 0.2)
+}
+#pre{
+    box-shadow: 0px 0px 20px 0px rgba(27, 27, 28, 0.3);
+}
+
+/*@media (prefers-color-scheme: dark) {*/
+/*    body {*/
+/*        background-color: var(--dark-main-color);*/
+/*    }*/
+
+/*    .slick-dots li.slick-active button:before {*/
+/*        color: white!important;*/
+/*    }*/
+/*    .slick-dots li button:before {*/
+/*        color: white!important;*/
+/*    }*/
+/*    .slick-prev:before, .slick-next:before {*/
+/*        color: white!important;*/
+/*    }*/
+/*}*/
 
 .slick-prev:before, .slick-next:before {
-    color: black;
+    color: black!important;
 }
+

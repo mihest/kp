@@ -1,15 +1,18 @@
 import CredentialsProvider from "next-auth/providers/credentials";
-import axios from "axios";
-import {jwt} from './utils'
+import axios from "@/app/lib/axios"
+import {jwt} from '@/app/lib/utils'
+import Cookie from "js-cookie";
+import {log} from "next/dist/server/typescript/utils";
 
-export const authOptions = {
+export const authOptions =  {
     pages: {
         signIn: "/login",
     },
     session: {
         strategy: "jwt",
-        maxAge: 1209600,
+        maxAge: 30 * 24 * 60 * 60,
     },
+    secret: process.env.NEXTAUTH_SECRET,
     providers: [
         CredentialsProvider({
             id: 'credentials',
@@ -26,28 +29,28 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const { data, status } = await axios.post('http://127.0.0.1:8000/api/auth/login', {
+                    const { data, status } = await axios.post('http://127.0.0.1:8000/auth/login', {
                         ...credentials
-                    }, {
-                        headers: {
-                            Accept: 'application/json'
-                        }
                     });
 
                     if (status !== 200) {
                         throw data.message;
                     }
 
-                    if(!data?.access_token) {
+                    if(!data?.token.access_token) {
                         throw data.message;
                     }
 
-                    return { ...data.user, accessToken: data.access_token };
+                    return {
+                        ...data.user,
+                        accessToken: data.token.access_token,
+                        refreshToken: data.token.refresh_token
+                    };
                 } catch (e) {
+                    console.log(e)
                     if(e instanceof Response) {
                         return null
                     }
-                    console.log(e)
 
                     // throw new Error('test');
                 }
@@ -58,7 +61,7 @@ export const authOptions = {
             name: 'register',
             credentials: {
                 name: {
-                    label: 'Name',
+                    label: 'login',
                     type: 'text'
                 },
                 email: {
@@ -72,7 +75,7 @@ export const authOptions = {
             },
             async authorize(credentials) {
                 try {
-                    const { data, status } = await axios.post('http://127.0.0.1:8000/api/auth/register', {
+                    const { data, status } = await axios.post('http://127.0.0.1:8000/auth/register', {
                         ...credentials
                     }, {
                         headers: {
@@ -88,7 +91,11 @@ export const authOptions = {
                         throw data.message;
                     }
 
-                    return { ...data.user, accessToken: data.access_token };
+                    return {
+                        ...data.user,
+                        accessToken: data.token.access_token,
+                        refreshToken: data.token.refresh_token
+                    };
                 } catch (e) {
                     if(e instanceof Response) {
                         return null;
@@ -100,29 +107,25 @@ export const authOptions = {
         })
     ],
     callbacks: {
-        async jwt({ token, user, trigger, session }) {
-            if(trigger === 'update'){
-                if(session.type === 'MANUAL') {
-                    const { data } = await axios.post('http://127.0.0.1:8000/api/auth/user', {}, {
-                        headers: {
-                            Accept: 'application/json',
-                            Authorization: `Bearer ${token.accessToken}`
-                        }
-                    });
+        async jwt({token, user, trigger, session}) {
+            console.log(token)
+            if (trigger === 'update') {
+                if (session.type === 'MANUAL') {
+                    const {data} = await axios.post('http://127.0.0.1:8000/auth/user');
                     token.role = data.role;
-                    return { ...token, ...data };
+                    return {...token, ...data};
                 }
 
-                return { ...token, ...session };
+                return {...token, ...session};
             }
 
             if (user) {
                 token.role = user.role;
-                return { ...token, ...user };
+                return {...token, ...user};
             }
-            const { exp: accessTokenExpires } = jwt.decode(token.accessToken);
+            const {exp: accessTokenExpires} = jwt.decode((token.accessToken).slice(7));
 
-            if(!accessTokenExpires) {
+            if (!accessTokenExpires) {
                 return token;
             }
 
@@ -130,51 +133,52 @@ export const authOptions = {
             const accessTokenHasExpired = currentUnixTimestamp > accessTokenExpires;
 
             if (accessTokenHasExpired) {
-                return await refreshAccessToken(token);
+                const NewToken =  await refreshAccessToken(token);
+                console.log(NewToken);
+                return NewToken
             }
 
             return token;
         },
-        async session({ session, token }) {
+        async session({session, token}) {
+
             if (token.error) {
                 throw new Error('refresh');
             }
 
             session.accessToken = token.accessToken;
-            session.user.name = token.name || '';
+            session.refreshToken = token.refreshToken;
+            session.user.login = token.login || '';
             session.user.email = token.email || '';
             session.user.role = token.role || ''
 
             return session;
         },
-        // events: {
-        //     async signOut({ token }) {
-        //         await axios.post('http://127.0.0.1:8000/api/auth/logout', {}, {
-        //             headers: {
-        //                 Accept: 'application/json',
-        //                 Authorization: `Bearer ${token.accessToken}`
-        //             }
-        //         });
-        //     }
-        // }
+        events: {
+            async signOut({token}) {
+                await axios.post('http://127.0.0.1:8000/auth/logout');
+            }
+        }
     }
 };
 
 async function refreshAccessToken(token) {
+    console.log(token)
     try {
-        const { data, status } = await  axios.post('http://127.0.0.1:8000/api/auth/refresh', {}, {
-            headers: {
-                Accept: 'application/json',
-                Authorization: `Bearer ${token.accessToken}`
-            }
+        const { data, status } = await axios.post('http://127.0.0.1:8000/auth/refresh', {
+            refresh: token.refreshToken
+        }, {
+            withCredentials: true
         });
         if (status !== 200) throw data.message;
 
-        const { exp } = jwt.decode(data.access_token);
-
+        const { exp } = jwt.decode((data.access_token).slice(7));
+        token.refreshToken = data.refresh_token
+        token.accessToken = data.access_token
         return {
             ...token,
             accessToken: data.access_token,
+            refreshToken: data.refresh_token,
             exp
         };
     } catch (e) {

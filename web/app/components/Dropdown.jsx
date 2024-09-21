@@ -1,5 +1,5 @@
-import {useState, createContext, useContext, Fragment, useEffect} from 'react';
-import { Transition } from '@headlessui/react';
+import { useState, createContext, useContext, Fragment, useEffect } from "react";
+import { Transition } from "@headlessui/react";
 import Link from "next/link";
 
 const DropDownContext = createContext();
@@ -8,7 +8,7 @@ const Dropdown = ({ children }) => {
     const [open, setOpen] = useState(false);
 
     const toggleOpen = () => {
-        setOpen((previousState) => !previousState);
+        setOpen((previousState) =>!previousState)
     };
 
     return (
@@ -19,19 +19,18 @@ const Dropdown = ({ children }) => {
 };
 
 const Trigger = ({ children }) => {
-    const { open, setOpen, toggleOpen } = useContext(DropDownContext);
+    const { open, setOpen, toggleOpen } = useContext(DropDownContext)
 
     return (
         <>
             <div onClick={toggleOpen}>{children}</div>
-
             {open && <div className="fixed inset-0 z-40" onClick={() => setOpen(false)}></div>}
         </>
     );
 };
 
-const Content = ({ align = 'right', width = '48', onClick = false, contentClasses = 'py-1 bg-white dark:bg-gray-700', children }) => {
-    const { open, setOpen } = useContext(DropDownContext);
+const Content = ({ align = 'right', width = '48', onClick = false, contentClasses = 'py-1 bg-white dark:bg-gray-700', top = false, children }) => {
+    const {open, setOpen} = useContext(DropDownContext);
 
     useEffect(() => {
         setOpen(false);
@@ -39,16 +38,19 @@ const Content = ({ align = 'right', width = '48', onClick = false, contentClasse
 
     let alignmentClasses = 'origin-top';
 
+
     if (align === 'left') {
         alignmentClasses = 'ltr:origin-top-left rtl:origin-top-right start-0';
     } else if (align === 'right') {
         alignmentClasses = 'ltr:origin-top-right rtl:origin-top-left end-0';
-    }
-    else if (align === 'right-center') {
+    } else if (align === 'right-center') {
         alignmentClasses = 'origin-top transform left-1/2 -translate-x-1/4';
-    }
-    else if (align === 'left-center') {
+    } else if (align === 'left-center') {
         alignmentClasses = 'origin-top transform right-1/2 translate-x-1/4';
+    }
+
+    if (top) {
+        alignmentClasses += ' bottom-24';
     }
 
     let widthClasses = '';
@@ -99,3 +101,4 @@ Dropdown.Content = Content;
 Dropdown.Link = DropdownLink;
 
 export default Dropdown;
+

@@ -32,6 +32,5 @@ class RoomSeeder extends Seeder
 
             $price += 499;
         }
-
     }
 }

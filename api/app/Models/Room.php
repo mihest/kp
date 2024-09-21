@@ -9,7 +9,7 @@ class Room extends Model
 {
     use FilterQueryString;
 
-    protected $filters = [
+    protected array $filters = [
         'sort',
         'between',
         'like',

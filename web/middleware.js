@@ -43,5 +43,5 @@ export default withAuth(
 );
 
 const authRoutes = ['/profile'];
-const adminRoutes = ['/about'];
+const adminRoutes = ['/admin'];
 const guestRoutes = ["/forgot-password", "/login", "/password-reset", "/register"];
